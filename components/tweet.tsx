@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
-import { TweetType } from '@/types';
+import { TweetType } from '../types';
 import { Entypo } from '@expo/vector-icons';
 import IconButton from './IconButton';
 import { Link } from 'expo-router';
@@ -9,9 +9,8 @@ type TweetProps = {
 }
 
 const Tweet = ({ tweet }: TweetProps) => {
-    console.log(tweet.user.image?.toLowerCase())
     return ( 
-      <Link href={`/tweet/${tweet.id}`} asChild>
+      <Link href={`/feed/tweet/${tweet.id}`} asChild>
         <Pressable style={styles.container}>
           <Image src={tweet.user.image} style={styles.userImage} />
         
