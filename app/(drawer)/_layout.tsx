@@ -8,14 +8,14 @@ const Drawer = withLayoutContext(DrawerNavigator);
 
 export const unstable_settings = {
     // Ensure that reloading on `/modal` keeps a back button present.
-    initialRouteName: '(tabs)',
+    initialRouteName: '(tabs)', 
   };
 
 function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView {...props}>
-            <Text style={{ alignSelf: 'center', fontSize: 20}}>Tyler</Text>
-            <DrawerItemList {...props} />
+          <Text style={{ alignSelf: 'center', fontSize: 20 }}>Tyler</Text>
+          <DrawerItemList {...props} />
         </DrawerContentScrollView>
     );
 }
