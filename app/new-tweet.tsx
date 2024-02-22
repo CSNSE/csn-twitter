@@ -31,10 +31,8 @@ export default function NewTweet() {
     mutationFn: createTweet,
     onSuccess: (data) => {
       // queryClient.invalidateQueries({ queryKey: ['tweets'] })
-      queryClient.setQueriesData(['tweets'], (existingTweets) => {
-        console.log("data", data);
-        console.log("existing: ", existingTweets);
-        return [ data, ...existingTweets, ] 
+      queryClient.setQueriesData(['tweets'], (existingTweets: any) => {
+        return [ data, ...existingTweets ] 
       });
     },
   });
