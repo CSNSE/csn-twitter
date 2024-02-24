@@ -8,15 +8,15 @@ const Authenticate = () => {
   const [code, setCode] = useState('');  
   const {email} = useGlobalSearchParams();
 
-  const { setAuthToken } = useAuth();
+  const { updateAuthToken } = useAuth();
 
   const onConfirm = async () => {
     if (typeof email !== 'string') {
       return;
     }
     try {
-      const res = await authenticate({ email, emailToken: code });
-      setAuthToken(res.authToken);
+      const res = await await authenticate({ email, emailToken: code });
+      await updateAuthToken(res.authToken);
     } catch (e) {
         Alert.alert('Error', "Email code doesn't match")
     }
