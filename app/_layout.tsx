@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import AuthContextProvider from '@/context/AuthContext';
 
 const client = new QueryClient();
 
@@ -50,17 +51,21 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <QueryClientProvider client = {client}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(drawer)" options={{ title: 'Back', headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          <Stack.Screen name='tweet/[id]' options={{ title: 'Tweet' }} />
-          <Stack.Screen name='new-tweet' options={{ title: 'New Tweet', headerShown: false  }} />
-          <Stack.Screen name="(auth)/signin" options={{ headerShown: false, title: "Back" }} />
-          <Stack.Screen name="(auth)/authenticate" options={{ title: 'Confirm' }} />
-        </Stack>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <>
+    <AuthContextProvider>
+      <QueryClientProvider client = {client}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(drawer)" options={{ title: 'Back', headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+            <Stack.Screen name='tweet/[id]' options={{ title: 'Tweet' }} />
+            <Stack.Screen name='new-tweet' options={{ title: 'New Tweet', headerShown: false  }} />
+            <Stack.Screen name="(auth)/signin" options={{ headerShown: false, title: "Back" }} />
+            <Stack.Screen name="(auth)/authenticate" options={{ title: 'Confirm' }} />
+          </Stack>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </AuthContextProvider>
+    </>
   );
 }
