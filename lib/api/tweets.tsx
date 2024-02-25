@@ -1,6 +1,19 @@
-import { API_URL, authToken } from "./config";
+import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useState } from "react";
+import { API_URL } from "./config";
+import { useAuth } from "@/context/AuthContext";
 
-export const listTweets = async () => {
+const TweetsApiContext = createContext({});
+
+const TweetsApiContextProvider = ({children}: PropsWithChildren) => {
+  const {authToken} = useAuth();
+
+  console.log('Auth token inside api provider: ', authToken);
+
+const listTweets = async () => {
+  if (!authToken) {
+    return;
+  }
+  
   const res = await fetch(`${API_URL}/tweet`, {
     headers: {
       Authorization: `Bearer ${authToken}`
@@ -13,9 +26,13 @@ export const listTweets = async () => {
     throw new Error('Error fetching tweets');
   }
   return await res.json();
-  };
+};
 
-export const getTweet = async (id: string) => {
+const getTweet = async (id: string) => {
+  if (!authToken) {
+    return;
+  }
+
   const res = await fetch(`${API_URL}/tweet/${id}`, {
     headers: {
       Authorization: `Bearer ${authToken}`
@@ -30,7 +47,11 @@ export const getTweet = async (id: string) => {
   return await res.json();
   };
 
-  export const createTweet = async (data: { content: string}) => {
+const createTweet = async (data: { content: string}) => {
+  if (!authToken) {
+    return;
+  }
+
     const res = await fetch(`${API_URL}/tweet`, {
       method: 'POST',
       headers: {
@@ -48,3 +69,20 @@ export const getTweet = async (id: string) => {
     }
     return await res.json();
     };
+
+  return (
+  <TweetsApiContext.Provider 
+    value={{
+      listTweets,
+      getTweet,
+      createTweet
+    }}
+  >
+    {children}
+  </TweetsApiContext.Provider>
+  );
+};
+
+export default TweetsApiContextProvider;
+
+export const useTweetsApi = () => useContext(TweetsApiContext);
