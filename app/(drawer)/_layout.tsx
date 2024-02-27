@@ -15,7 +15,7 @@ export const unstable_settings = {
 function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView {...props}>
-          <Text style={{ alignSelf: 'center', fontSize: 20 }}>Tyler</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 20 }}>Profile Information</Text>
           <DrawerItemList {...props} />
         </DrawerContentScrollView>
     );
