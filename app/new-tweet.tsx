@@ -18,13 +18,13 @@ const user = {
   username: 'VadimNotJustDev',
   name: 'Vadim',
   image:
-    'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.png',
+    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
 };
 
 export default function NewTweet() {
   const [text, setText] = useState('');
   const router = useRouter();
-  
+
   const { createTweet } = useTweetsApi();
 
   const queryClient = useQueryClient();

@@ -23,7 +23,7 @@ function AvatarHeader() {
   return (
     <Pressable onPress={() => navigation.openDrawer() }>
       <Image 
-        src="https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/vadim.png" 
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" 
         style={{width: 30, aspectRatio: 1, borderRadius: 40, marginLeft: 10 }}
       />
     </Pressable>
