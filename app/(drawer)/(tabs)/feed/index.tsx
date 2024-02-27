@@ -32,7 +32,7 @@ export default function FeedScreen() {
       <Link href="/new-tweet" asChild>
         <Entypo 
           name="plus" 
-          size={28} 
+          size={34} 
           color="white"
           style={styles.floatingButton}
         />
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   },
   floatingButton: {
     backgroundColor: '#1C9BF0',
-    borderRadius: 25,
-    padding: 15,
+    borderRadius: 29,
+    padding: 12,
 
     position: 'absolute',
     right: 15,
