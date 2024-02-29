@@ -3,12 +3,14 @@ import { TweetType } from '../types';
 import { Entypo } from '@expo/vector-icons';
 import IconButton from './IconButton';
 import { Link } from 'expo-router';
+import moment from 'moment';
 
 type TweetProps = {
     tweet: TweetType;
 }
 
 const Tweet = ({ tweet }: TweetProps) => {
+const timeFromNow = moment(tweet.createdAt).fromNow();
     return ( 
       <Link href={`/feed/tweet/${tweet.id}`} asChild>
         <Pressable style={styles.container}>
@@ -17,7 +19,7 @@ const Tweet = ({ tweet }: TweetProps) => {
           <View style={styles.mainContainer}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.name}>{tweet.user.name}</Text>
-              <Text style={styles.username}>{tweet.user.username} · 2h</Text>
+              <Text style={styles.username}>{tweet.user.username} · {timeFromNow}</Text>
               <Entypo 
                 name="dots-three-horizontal" 
                 size={16} 

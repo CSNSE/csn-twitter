@@ -3,6 +3,26 @@ import { DrawerContentScrollView, DrawerItemList, createDrawerNavigator } from "
 import { ActivityIndicator, Text } from "react-native";
 import { useAuth } from "@/context/AuthContext";
 
+//logout button (i didnt put it as its own component, i put it inside the drawer for testing)
+import React from 'react';
+import { Button, View } from 'react-native';
+
+const LogoutButton = () => {
+  const { removeAuthToken } = useAuth();
+
+  const handleLogout = async () => {
+    await removeAuthToken();
+    // Add any additional logout logic if needed
+  };
+
+  return (
+    <View style={{ margin: 20 }}>
+      <Button title="Logout" onPress={handleLogout} />
+    </View>
+  );
+};
+
+
 const DrawerNavigator = createDrawerNavigator().Navigator;
 
 const Drawer = withLayoutContext(DrawerNavigator);
@@ -17,6 +37,7 @@ function CustomDrawerContent(props) {
         <DrawerContentScrollView {...props}>
           <Text style={{ alignSelf: 'center', fontSize: 20 }}>Profile Information</Text>
           <DrawerItemList {...props} />
+          <LogoutButton />
         </DrawerContentScrollView>
     );
 }

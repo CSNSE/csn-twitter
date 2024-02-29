@@ -4,13 +4,14 @@ import { useRouter } from 'expo-router';
 import { login } from '@/lib/api/auth';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');  
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');  
   const router = useRouter();
 
   const onSignIn = async () => {
-    console.warn("Sign in: ", email);
+    console.warn("Sign in: ", email, username);
     try {
-      await login({ email });
+      await login({ email, username });
       router.push({pathname: '/authenticate', params: {email} })
     } catch (e) {
         Alert.alert('Error', e.message);
@@ -27,6 +28,13 @@ const SignIn = () => {
         onChangeText={setEmail} 
         style={styles.input} 
       />
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
+
 
       <Pressable style={styles.button} onPress={onSignIn}>
         <Text style={styles.buttonText}>Sign in</Text>
