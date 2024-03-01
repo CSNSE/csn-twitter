@@ -7,21 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import React from 'react';
 import { Button, View } from 'react-native';
 
-const LogoutButton = () => {
-  const { removeAuthToken } = useAuth();
-
-  const handleLogout = async () => {
-    await removeAuthToken();
-    // Add any additional logout logic if needed
-  };
-
-  return (
-    <View style={{ margin: 20 }}>
-      <Button title="Logout" onPress={handleLogout} />
-    </View>
-  );
-};
-
 
 const DrawerNavigator = createDrawerNavigator().Navigator;
 
@@ -35,9 +20,8 @@ export const unstable_settings = {
 function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView {...props}>
-          <Text style={{ alignSelf: 'center', fontSize: 20 }}>put profile display here</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 20 }}>put profile preview here</Text>
           <DrawerItemList {...props} />
-          <LogoutButton />
         </DrawerContentScrollView>
     );
 }

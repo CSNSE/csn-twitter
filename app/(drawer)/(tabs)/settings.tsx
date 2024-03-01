@@ -1,10 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { useAuth } from '@/context/AuthContext';
 
 const SettingsScreen = () => {
+  const { removeAuthToken } = useAuth();
+  const handleLogout = async () => {
+    await removeAuthToken();
+    // Navigate to the login screen or perform other cleanup actions as necessary
+  };
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
+      <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 };
