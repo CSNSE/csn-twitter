@@ -35,7 +35,7 @@ export const unstable_settings = {
 function CustomDrawerContent(props) {
     return (
         <DrawerContentScrollView {...props}>
-          <Text style={{ alignSelf: 'center', fontSize: 20 }}>Profile Information</Text>
+          <Text style={{ alignSelf: 'center', fontSize: 20 }}>put profile display here</Text>
           <DrawerItemList {...props} />
           <LogoutButton />
         </DrawerContentScrollView>
@@ -59,8 +59,8 @@ export default function DrawerLayout() {
           options={{ title: 'Bookmarks' }} 
         />
         <Drawer.Screen 
-          name='twitter-blue' 
-          options={{ title: 'Twitter Blue' }} 
+          name='profile' 
+          options={{ title: 'Profile Settings' }} 
         />
     </Drawer>
 }
