@@ -5,6 +5,7 @@ import { Pressable, useColorScheme, Image } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { FontAwesome5 } from '@expo/vector-icons';
+import SettingsScreen from './settings';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -92,6 +93,31 @@ export default function TabLayout() {
     ),
   }}
 />
+<Tabs.Screen
+  name="settings"
+  options={{
+    title: 'Settings',
+    tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />, // Using FontAwesome 'cog' icon for settings
+    headerRight: () => (
+      <Link href="/modal" asChild>
+        <Pressable>
+          {({ pressed }) => (
+            <FontAwesome
+              name="info-circle"
+              size={25}
+              color={Colors[colorScheme ?? 'light'].text}
+              style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+            />
+          )}
+        </Pressable>
+      </Link>
+    ),
+    headerLeft: () => (
+      <AvatarHeader />
+    ),
+  }}
+/>
+
     </Tabs>
   );
 }
