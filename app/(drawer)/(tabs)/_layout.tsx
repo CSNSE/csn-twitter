@@ -5,7 +5,6 @@ import { Pressable, useColorScheme, Image } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { FontAwesome5 } from '@expo/vector-icons';
-import SettingsScreen from './settings';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
