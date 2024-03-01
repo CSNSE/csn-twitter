@@ -9,7 +9,7 @@ const SignIn = () => {
 
   const onSignIn = async () => {
     try {
-      await login({ email });
+      const response = await login({ email });
       // Assuming the login function navigates to the verification code page or handles it internally
       router.push({ pathname: '/authenticate', params: { email } });
     } catch (e) {
