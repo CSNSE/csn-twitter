@@ -4,12 +4,15 @@ import { Entypo } from '@expo/vector-icons';
 import IconButton from './IconButton';
 import { Link } from 'expo-router';
 import moment from 'moment';
+import { Modal, Button, Alert } from 'react-native';
+import { useState } from 'react';
 
 type TweetProps = {
     tweet: TweetType;
 }
 
 const Tweet = ({ tweet }: TweetProps) => {
+const [modalVisible, setModalVisible] = useState(false);
 const timeFromNow = moment(tweet.createdAt).fromNow();
     return ( 
       <Link href={`/feed/tweet/${tweet.id}`} asChild>
@@ -20,11 +23,10 @@ const timeFromNow = moment(tweet.createdAt).fromNow();
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.name}>{tweet.user.name}</Text>
               <Text style={styles.username}>{tweet.user.username} · {timeFromNow}</Text>
-              <Entypo 
-                name="dots-three-horizontal" 
-                size={16} 
-                color="gray" 
-                style={{marginLeft: 'auto'}}/>
+              <Pressable onPress={() => setModalVisible(true)} style={{ marginLeft: 'auto' }}>
+  <Entypo name="dots-three-horizontal" size={16} color="gray" />
+</Pressable>
+
             </View>  
 
             <Text style={styles.content}>{tweet.content}</Text>
@@ -38,6 +40,33 @@ const timeFromNow = moment(tweet.createdAt).fromNow();
               <IconButton icon="chart" text={tweet.impressions || 0} />
               <IconButton icon="share-apple" />
             </View>
+            <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => {
+    Alert.alert("Modal has been closed.");
+    setModalVisible(!modalVisible);
+  }}
+>
+  <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+      {/* <Text style={styles.modalText}>Are you sure you want to delete this tweet?</Text> */}
+      <Button
+        title="Delete"
+        onPress={() => {
+          // Add your delete logic here
+          console.log("Tweet deleted");
+          setModalVisible(!modalVisible);
+        }}
+      />
+      <Button
+        title="Cancel"
+        onPress={() => setModalVisible(!modalVisible)}
+      />
+    </View>
+  </View>
+</Modal>
           </View>
         </Pressable>
       </Link>
@@ -82,7 +111,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 5,
         justifyContent: 'space-between'
-    }
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center"
+    },    
   });
   
 export default Tweet;

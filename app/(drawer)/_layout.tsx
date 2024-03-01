@@ -44,7 +44,7 @@ export default function DrawerLayout() {
         />
         <Drawer.Screen 
           name='profile' 
-          options={{ title: 'Profile Settings' }} 
+          options={{ title: 'Profile' }} 
         />
     </Drawer>
 }
