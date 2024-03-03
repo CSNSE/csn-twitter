@@ -1,10 +1,12 @@
 import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { login } from '@/lib/api/auth';
+import { login, register } from '@/lib/api/auth';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const router = useRouter();
 
   const onSignIn = async () => {
@@ -17,9 +19,18 @@ const SignIn = () => {
     }
   };
 
+  const onCreateAccount = async () => {
+    try {
+      const response = await register({ email, username });
+      router.push({ pathname: '/authenticate', params: { email }});
+    } catch (e) {
+      Alert.alert('Error', e.message);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Sign in or create an account</Text>
+      <Text style={styles.label}>{isCreatingAccount ? 'Create Account' : 'Sign in'}</Text>
       
       <TextInput
         placeholder="Email"
@@ -28,8 +39,21 @@ const SignIn = () => {
         style={styles.input}
       />
 
-      <Pressable style={styles.button} onPress={onSignIn}>
-        <Text style={styles.buttonText}>Sign in</Text>
+      {isCreatingAccount && (
+        <TextInput
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          style={styles.input}
+        />
+      )}
+
+      <Pressable style={styles.button} onPress={isCreatingAccount ? onCreateAccount : onSignIn}>
+        <Text style={styles.buttonText}>{isCreatingAccount ? 'Create Account' : 'Sign in'}</Text>
+      </Pressable>
+
+      <Pressable onPress={() => setIsCreatingAccount(!isCreatingAccount)} style={{ marginTop: 20 }}>
+        <Text>{isCreatingAccount ? 'Already have an account? Sign in' : 'Don’t have an account? Create one'}</Text>
       </Pressable>
     </View>
   );

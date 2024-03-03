@@ -29,3 +29,17 @@ export const authenticate = async (data: {
   }
   return res.json();
 };
+
+export const register = async (data: { email: string; username: string }) => {
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'Application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  if (res.status !== 200) {
+    throw new Error('Error during the account creation process');
+  }
+  return res.json();
+};
