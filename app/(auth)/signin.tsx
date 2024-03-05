@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 24,
     marginVertical: 5,
-    color: 'gray',
+    color: '#024b8f',
   },
   input: {
     borderColor: 'gray',
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   button: {
-    backgroundColor: '#050A12',
+    backgroundColor: '#024b8f',
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
