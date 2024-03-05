@@ -53,8 +53,14 @@ const SignIn = () => {
       </Pressable>
 
       <Pressable onPress={() => setIsCreatingAccount(!isCreatingAccount)} style={{ marginTop: 20 }}>
-        <Text>{isCreatingAccount ? 'Already have an account? Sign in' : 'Don’t have an account? Create one'}</Text>
-      </Pressable>
+  <Text>
+    {isCreatingAccount ? 'Already have an account? ' : 'Don’t have an account? '}
+    <Text style={{color: '#024b8f' }}> {/* Adjust the color and fontWeight as needed */}
+      {isCreatingAccount ? 'Sign in' : 'Create one'}
+    </Text>
+  </Text>
+</Pressable>
+
     </View>
   );
 };
