@@ -34,12 +34,14 @@ const SignIn = () => {
     <View style={styles.container}>
       <Text style={styles.label}>{isCreatingAccount ? 'Create Account' : 'Sign in'}</Text>
       
+      {isCreatingAccount && (
       <TextInput
         placeholder="Name"
         value={name}
         onChangeText={setName}
         style={styles.input}
       />
+      )}
       
       <TextInput
         placeholder="Email"
