@@ -61,7 +61,7 @@ export default function NewTweet() {
           {isLoading && <ActivityIndicator />}
           <Pressable onPress={onTweetPress} style={styles.button}>
             <Text style={styles.buttonText}>
-                Tweet
+                Post
             </Text>
           </Pressable>
         </View>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     button: {
-      backgroundColor: '#1C9BF0',
+      backgroundColor: '#024b8f',
       padding: 10,
       paddingHorizontal: 20,
       borderRadius: 50,
