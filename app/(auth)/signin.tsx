@@ -6,6 +6,8 @@ import { login, register } from '@/lib/api/auth';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const router = useRouter();
 
@@ -31,6 +33,13 @@ const SignIn = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{isCreatingAccount ? 'Create Account' : 'Sign in'}</Text>
+      
+      <TextInput
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+        style={styles.input}
+      />
       
       <TextInput
         placeholder="Email"
