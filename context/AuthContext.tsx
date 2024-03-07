@@ -4,8 +4,9 @@ import * as SecureStore from 'expo-secure-store';
 
 const AuthContext = createContext({});
 
-const AuthContextProvider = ({children}: PropsWithChildren) => {
+export const AuthContextProvider = ({children}: PropsWithChildren) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const segments = useSegments();
   const router = useRouter();
 
@@ -19,6 +20,13 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
       router.replace('/');
     }
   }, [segments, authToken]);
+
+  useEffect(() => {
+    // Simulate fetching user data (e.g., from local storage or an API)
+    const user = { email: 'user@example.com' }; // This should be your actual authentication logic
+    setCurrentUser(user);
+    console.log('CurrentUser in AuthProvider:', user);
+  }, []);
 
   useEffect(() => {
     const loadAuthToken = async () => {
@@ -41,7 +49,7 @@ const AuthContextProvider = ({children}: PropsWithChildren) => {
   };
 
   return (
-    <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken }}>
+    <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>
       {children}
     </AuthContext.Provider>
   );
