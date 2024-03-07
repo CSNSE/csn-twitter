@@ -6,9 +6,35 @@ import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTweetsApi } from '@/lib/api/tweets';
 import { useQuery } from '@tanstack/react-query';
+import { RefreshControl } from 'react-native';
+import React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function FeedScreen() {
   const {listTweets} = useTweetsApi();
+
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await queryClient.invalidateQueries(['tweets']);
+    setRefreshing(false);
+  
+    try {
+      // Assuming listTweets is an async function that fetches the tweets
+      await listTweets().then(data => {
+        // Assuming 'data' contains the latest tweets
+        // Update your state or cache here with the latest tweets
+      });
+    } catch (error) {
+      console.error("Failed to refresh tweets:", error);
+      // Handle error, e.g., show a toast message
+    }
+  
+    setRefreshing(false);
+  }, [listTweets]); // listTweets should be stable or wrapped in useCallback if defined within this component
+  
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['tweets'],
@@ -27,7 +53,16 @@ export default function FeedScreen() {
     <View style={styles.page}>
       <FlatList 
         data={data} 
-        renderItem={({item}) => <Tweet tweet={item} /> } />
+        renderItem={({item}) => <Tweet tweet={item} /> } 
+        keyExtractor={item => item.id.toString()}
+  // Add the RefreshControl component
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  }
+      />
 
       <Link href="/new-tweet" asChild>
         <Entypo 
