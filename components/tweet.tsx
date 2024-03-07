@@ -6,6 +6,8 @@ import { Link } from 'expo-router';
 import moment from 'moment';
 import { Modal, Button, Alert } from 'react-native';
 import { useState } from 'react';
+import { useTweetsApi } from '@/lib/api/tweets';
+import { useAuth } from '@/context/AuthContext';
 
 type TweetProps = {
     tweet: TweetType;
@@ -14,6 +16,8 @@ type TweetProps = {
 const Tweet = ({ tweet }: TweetProps) => {
 const [modalVisible, setModalVisible] = useState(false);
 const timeFromNow = moment(tweet.createdAt).fromNow();
+const { deleteTweet } = useTweetsApi();
+const { authToken } = useAuth();
     return ( 
       <Link href={`/feed/tweet/${tweet.id}`} asChild>
         <Pressable style={styles.container}>
@@ -53,13 +57,17 @@ const timeFromNow = moment(tweet.createdAt).fromNow();
     <View style={styles.modalView}>
       {/* <Text style={styles.modalText}>Are you sure you want to delete this tweet?</Text> */}
       <Button
-        title="Delete"
-        onPress={() => {
-          // Add your delete logic here
-          console.log("Tweet deleted");
-          setModalVisible(!modalVisible);
-        }}
-      />
+  title="Delete"
+  onPress={async () => {
+    try {
+      await deleteTweet(tweet.id, authToken); // Call deleteTweet with tweet.id and authToken
+      // Optimistically remove the tweet from UI here
+    } catch (error) {
+      console.error("Failed to delete tweet:", error);
+      // Optionally revert the UI or show an error
+    }
+  }}
+/>
       <Button
         title="Cancel"
         onPress={() => setModalVisible(!modalVisible)}

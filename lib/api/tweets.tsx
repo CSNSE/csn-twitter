@@ -71,12 +71,29 @@ const createTweet = async (data: { content: string}) => {
     return await res.json();
     };
 
+const deleteTweet = async (id: string) => {
+  if (!authToken) {
+    return;
+  }
+
+  const res = await fetch(`${API_URL}/tweet/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+  if (res.status != 200) {
+    throw new Error('Failed to delete tweet');
+  }
+};
+
   return (
   <TweetsApiContext.Provider 
     value={{
       listTweets,
       getTweet,
-      createTweet
+      createTweet,
+      deleteTweet
     }}
   >
     {children}
