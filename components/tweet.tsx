@@ -11,9 +11,10 @@ import { useAuth } from '@/context/AuthContext';
 
 type TweetProps = {
   tweet: TweetType;
+  isIndividualView?: boolean;
 }
 
-const Tweet = ({ tweet }: TweetProps) => {
+const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
   const [modalVisible, setModalVisible] = useState(false);
   const timeFromNow = moment(tweet.createdAt).fromNow();
   const { deleteTweet } = useTweetsApi();
@@ -54,6 +55,7 @@ const Tweet = ({ tweet }: TweetProps) => {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
+                {isIndividualView && (
                 <Button
                   title="Delete"
                   onPress={async () => {
@@ -65,6 +67,7 @@ const Tweet = ({ tweet }: TweetProps) => {
                     }
                   }}
                 />
+                )}
                 <Button
                   title="Cancel"
                   onPress={() => setModalVisible(!modalVisible)}

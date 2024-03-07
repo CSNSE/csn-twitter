@@ -21,5 +21,5 @@ export default function TweetScreen() {
       return <Text>Tweet {id} not found!</Text>;
     }
 
-    return <Tweet tweet={data} />
+    return <Tweet tweet={data} isIndividualView={true} />
 }
