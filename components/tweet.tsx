@@ -60,7 +60,8 @@ const { authToken } = useAuth();
   title="Delete"
   onPress={async () => {
     try {
-      await deleteTweet(tweet.id, authToken); // Call deleteTweet with tweet.id and authToken
+      await deleteTweet(tweet.id, authToken);
+      setModalVisible(false); // Call deleteTweet with tweet.id and authToken
       // Optimistically remove the tweet from UI here
     } catch (error) {
       console.error("Failed to delete tweet:", error);

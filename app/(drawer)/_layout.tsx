@@ -43,7 +43,7 @@ export default function DrawerLayout() {
           options={{ title: 'Bookmarks' }} 
         />
         <Drawer.Screen 
-          name='profile' 
+          name='Profile' 
           options={{ title: 'Profile' }} 
         />
     </Drawer>
