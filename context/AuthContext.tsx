@@ -1,6 +1,7 @@
 import { useRouter, useSegments } from "expo-router";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import * as SecureStore from 'expo-secure-store';
+import { API_URL } from "@/lib/api/config";
 
 const AuthContext = createContext({});
 
@@ -47,6 +48,26 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
     await SecureStore.deleteItemAsync('authToken');
     setAuthToken(null);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const authToken = await SecureStore.getItemAsync('authToken');
+        if (authToken) {
+            const response = await fetch(`${API_URL}/user/me`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
+            if (response.ok) {
+                const userData = await response.json();
+                setCurrentUser(userData);
+            } else {
+                // add debug logic?
+            }
+        }
+    };
+    fetchData();
+}, []);
 
   return (
     <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>
