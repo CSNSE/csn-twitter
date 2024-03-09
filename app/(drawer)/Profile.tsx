@@ -8,7 +8,10 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       {currentUser ? (
+        <>
         <Text style={styles.email}>Email: {currentUser.email}</Text>
+        <Text style={styles.email}>Username: {currentUser.username}</Text>
+        </>
       ) : (
         <Text style={styles.infoText}>User is not logged in</Text>
       )}

@@ -1,5 +1,5 @@
 import { useRouter, useSegments } from "expo-router";
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@/lib/api/config";
 
@@ -23,11 +23,31 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
   }, [segments, authToken]);
 
   useEffect(() => {
-    // Simulate fetching user data (e.g., from local storage or an API)
-    const user = { email: 'user@example.com' }; // This should be your actual authentication logic
-    setCurrentUser(user);
-    console.log('CurrentUser in AuthProvider:', user);
+    const fetchData = async () => {
+      const authToken = await SecureStore.getItemAsync('authToken');
+      if (authToken) {
+        try {
+          const response = await fetch(`${API_URL}/user/me`, {
+            headers: {
+              'Authorization': `Bearer ${authToken}`
+            }
+          });
+          if (response.ok) {
+            const userData = await response.json();
+            setCurrentUser(userData); // Assuming userData contains the email and any other needed info
+          } else {
+            console.error("Failed to fetch user data: ", response.statusText);
+            // Handle failure (e.g., clearing auth token and redirecting to login)
+          }
+        } catch (error) {
+          console.error("Error fetching user data: ", error);
+          // Handle errors, such as network issues
+        }
+      }
+    };
+    fetchData();
   }, []);
+  
 
   useEffect(() => {
     const loadAuthToken = async () => {
@@ -50,24 +70,26 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-        const authToken = await SecureStore.getItemAsync('authToken');
-        if (authToken) {
-            const response = await fetch(`${API_URL}/user/me`, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                }
-            });
-            if (response.ok) {
-                const userData = await response.json();
-                setCurrentUser(userData);
-            } else {
-                // add debug logic?
-            }
-        }
+    const fetchCurrentUser = async () => {
+      const authToken = await SecureStore.getItemAsync('authToken');
+      if (!authToken) return;
+
+      try {
+        const response = await fetch(`${API_URL}/user/me`, {
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch user data.');
+
+        const userData = await response.json();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error(error);
+      }
     };
-    fetchData();
-}, []);
+
+    fetchCurrentUser();
+  }, []);
 
   return (
     <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>
