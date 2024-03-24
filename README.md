@@ -1,6 +1,6 @@
 # CSN Twitter App
 
-A brief description of your project.
+This app was made for CSN students to have a dedicated social media app for sharing links with others, posting assigments, events, and doing everything a school management system does, but nicer.
 
 ## Backend
 
