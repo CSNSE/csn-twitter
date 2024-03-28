@@ -27,7 +27,7 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
         <View style={styles.mainContainer}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.name}>{tweet.user.name}</Text>
-            <Text style={styles.username}>{tweet.user.username} · {timeFromNow}</Text>
+            <Text style={styles.username}>@{tweet.user.username} · {timeFromNow}</Text>
             <Pressable onPress={() => setModalVisible(true)} style={{ marginLeft: 'auto' }}>
               <Entypo name="dots-three-horizontal" size={16} color="gray" />
             </Pressable>
