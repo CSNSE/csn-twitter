@@ -1,14 +1,19 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, FlatList, Text } from 'react-native';
 
-export default function TabTwoScreen() {
+export default function SearchScreen() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <View style={styles.container}>
-      <WebView
-        source={{ uri: 'https://communityschoolnaples.myschoolapp.com/app/student#studentmyday/assignment-center' }} // Replace with your school website URL
-        style={styles.webview}
+      <TextInput
+        style={styles.input}
+        placeholder="Search tweets or users..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
       />
+      {/* Placeholder for search results */}
+      <Text>Search results appear here...</Text>
     </View>
   );
 }
@@ -16,8 +21,13 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 10,
   },
-  webview: {
-    flex: 1,
+  input: {
+    height: 40,
+    marginBottom: 20,
+    borderWidth: 1,
+    padding: 10,
   },
 });
+

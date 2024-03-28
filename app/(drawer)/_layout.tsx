@@ -39,6 +39,10 @@ export default function DrawerLayout() {
           options={{ headerShown: false, title: 'Home' }} 
         />
         <Drawer.Screen 
+          name='blackbaud' 
+          options={{ title: 'Blackbaud' }} 
+        />
+        <Drawer.Screen 
           name='bookmarks' 
           options={{ title: 'Bookmarks' }} 
         />
