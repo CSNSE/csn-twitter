@@ -69,27 +69,29 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
     setAuthToken(null);
   };
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const authToken = await SecureStore.getItemAsync('authToken');
-      if (!authToken) return;
+  // Simplify the fetching logic
+useEffect(() => {
+  const fetchCurrentUser = async () => {
+    const authToken = await SecureStore.getItemAsync('authToken');
+    if (!authToken) return;
 
-      try {
-        const response = await fetch(`${API_URL}/user/me`, {
-          headers: { 'Authorization': `Bearer ${authToken}` },
-        });
+    try {
+      const response = await fetch(`${API_URL}/user/me`, {
+        headers: { 'Authorization': `Bearer ${authToken}` },
+      });
 
-        if (!response.ok) throw new Error('Failed to fetch user data.');
+      if (!response.ok) throw new Error('Failed to fetch user data.');
 
-        const userData = await response.json();
-        setCurrentUser(userData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const userData = await response.json();
+      setCurrentUser(userData);
+    } catch (error) {
+      console.error(error);
+      // Consider adding logout or auth token removal here if fetch fails
+    }
+  };
 
-    fetchCurrentUser();
-  }, []);
+  fetchCurrentUser();
+}, [authToken]); // Depend on authToken to refetch when it changes
 
   return (
     <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>
