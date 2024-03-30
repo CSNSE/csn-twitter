@@ -8,6 +8,7 @@ import { Modal, Button, Alert } from 'react-native';
 import { useState } from 'react';
 import { useTweetsApi } from '@/lib/api/tweets';
 import { useAuth } from '@/context/AuthContext';
+import { API_URL } from "@/lib/api/config";
 
 type TweetProps = {
   tweet: TweetType;
@@ -19,13 +20,30 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
   const timeFromNow = moment(tweet.createdAt).fromNow();
   const { deleteTweet } = useTweetsApi();
   const { authToken } = useAuth();
+
+  // Handle like function moved inside the component
+  const handleLike = async (tweetId) => {
+    try {
+      await fetch(`${API_URL}/tweet/${tweetId}/like`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      // Optionally refresh the tweet or tweet list to show updated likes
+    } catch (error) {
+      console.error("Failed to like tweet:", error);
+    }
+  };
+
   return (
     <Link href={`/feed/tweet/${tweet.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image src={tweet.user.image} style={styles.userImage} />
+        <Image source={{ uri: tweet.user.image }} style={styles.userImage} />
         
         <View style={styles.mainContainer}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Text style={styles.name}>{tweet.user.name}</Text>
             <Text style={styles.username}>@{tweet.user.username} · {timeFromNow}</Text>
             <Pressable onPress={() => setModalVisible(true)} style={{ marginLeft: 'auto' }}>
@@ -35,12 +53,16 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
 
           <Text style={styles.content}>{tweet.content}</Text>
 
-          {tweet.image && <Image src={tweet.image} style={styles.image} />}
+          {tweet.image && <Image source={{ uri: tweet.image }} style={styles.image} />}
 
           <View style={styles.footer}>
             <IconButton icon="comment" text={tweet.numberOfComments} />
             <IconButton icon="retweet" text={tweet.numberOfRetweets} />
-            <IconButton icon="heart" text={tweet.numberOfLikes} />
+            <IconButton 
+              icon="heart" 
+              text={tweet.numberOfLikes}
+              onPress={() => handleLike(tweet.id)} 
+            />
             <IconButton icon="chart" text={tweet.impressions || 0} />
             <IconButton icon="share-apple" />
           </View>
@@ -78,8 +100,8 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
         </View>
       </Pressable>
     </Link>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -118,13 +140,13 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     marginVertical: 5,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
@@ -135,15 +157,15 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
   },
 });
 

@@ -4,6 +4,7 @@ import { EvilIcons } from '@expo/vector-icons';
 type IconButtonProps = {
     icon: React.ComponentProps<typeof EvilIcons>['name'];
     text?: string | number;
+    onPress?: () => void;
 };
 
 const IconButton = ({icon, text}: IconButtonProps) => {
