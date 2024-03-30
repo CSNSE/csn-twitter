@@ -5,6 +5,8 @@ import { useAuth } from '@/context/AuthContext'; // Ensure the path is correct
 const Profile = () => {
   const { currentUser } = useAuth();
 
+  console.log("Current User in Profile: ", currentUser); // Log the current user data
+
   return (
     <View style={styles.container}>
       {currentUser ? (

@@ -74,19 +74,21 @@ useEffect(() => {
   const fetchCurrentUser = async () => {
     const authToken = await SecureStore.getItemAsync('authToken');
     if (!authToken) return;
+    console.log(`Fetching user data with token: ${authToken}`); // Debug log
 
     try {
       const response = await fetch(`${API_URL}/user/me`, {
         headers: { 'Authorization': `Bearer ${authToken}` },
       });
+      console.log('Response received:', response); // Log the raw response
 
       if (!response.ok) throw new Error('Failed to fetch user data.');
 
       const userData = await response.json();
+      console.log(`Received user data: `, userData); // Debug log
       setCurrentUser(userData);
     } catch (error) {
-      console.error(error);
-      // Consider adding logout or auth token removal here if fetch fails
+      console.error(`Error fetching user data: `, error); // Log any errors
     }
   };
 
