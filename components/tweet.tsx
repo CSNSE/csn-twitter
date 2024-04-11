@@ -22,7 +22,7 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
   const handleDelete = () => {
     Alert.alert(
       "Confirm Delete",
-      "Are you sure you want to delete this tweet?",
+      "Are you sure you want to delete this post?",
       [
         {
           text: "Cancel",
