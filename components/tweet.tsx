@@ -1,14 +1,12 @@
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, Alert, Modal, Button } from 'react-native';
 import { TweetType } from '../types';
 import { Entypo } from '@expo/vector-icons';
 import IconButton from './IconButton';
 import { Link } from 'expo-router';
 import moment from 'moment';
-import { Modal, Button, Alert } from 'react-native';
 import { useState } from 'react';
 import { useTweetsApi } from '@/lib/api/tweets';
 import { useAuth } from '@/context/AuthContext';
-import { API_URL } from "@/lib/api/config";
 
 type TweetProps = {
   tweet: TweetType;
@@ -21,20 +19,30 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
   const { deleteTweet } = useTweetsApi();
   const { authToken } = useAuth();
 
-  // Handle like function moved inside the component
-  const handleLike = async (tweetId) => {
-    try {
-      await fetch(`${API_URL}/tweet/${tweetId}/like`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
+  const handleDelete = () => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this tweet?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
         },
-      });
-      // Optionally refresh the tweet or tweet list to show updated likes
-    } catch (error) {
-      console.error("Failed to like tweet:", error);
-    }
+        { 
+          text: "Delete", 
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteTweet(tweet.id, authToken);
+              setModalVisible(false); // Close the modal after deleting
+            } catch (error) {
+              console.error("Failed to delete tweet:", error);
+            }
+          }
+        }
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -49,7 +57,7 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
             <Pressable onPress={() => setModalVisible(true)} style={{ marginLeft: 'auto' }}>
               <Entypo name="dots-three-horizontal" size={16} color="gray" />
             </Pressable>
-          </View>  
+          </View>
 
           <Text style={styles.content}>{tweet.content}</Text>
 
@@ -61,7 +69,7 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
             <IconButton 
               icon="heart" 
               text={tweet.numberOfLikes}
-              onPress={() => handleLike(tweet.id)} 
+              onPress={() => console.log('Like tweet')} // Implement like functionality as needed
             />
             <IconButton icon="chart" text={tweet.impressions || 0} />
             <IconButton icon="share-apple" />
@@ -71,28 +79,18 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
               setModalVisible(!modalVisible);
             }}
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                {isIndividualView && (
                 <Button
                   title="Delete"
-                  onPress={async () => {
-                    try {
-                      await deleteTweet(tweet.id, authToken);
-                      setModalVisible(false);
-                    } catch (error) {
-                      console.error("Failed to delete tweet:", error);
-                    }
-                  }}
+                  onPress={handleDelete}
                 />
-                )}
                 <Button
                   title="Cancel"
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => setModalVisible(false)}
                 />
               </View>
             </View>
