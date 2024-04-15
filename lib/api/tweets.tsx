@@ -76,16 +76,37 @@ const deleteTweet = async (id: string) => {
     return;
   }
 
-  const res = await fetch(`${API_URL}/tweet/${id}`, {
+  // Fetch the tweet to verify the author
+  const tweetRes = await fetch(`${API_URL}/tweet/${id}`, {
+    headers: {
+      Authorization: `Bearer ${authToken}`
+    }
+  });
+
+  if (tweetRes.status !== 200) {
+    throw new Error('Error fetching tweet details');
+  }
+
+  const tweet = await tweetRes.json();
+
+  // Check if the authenticated user is the author of the tweet
+  if (tweet.authorId !== authToken.userId) {
+    throw new Error('You are not authorized to delete this tweet');
+  }
+
+  // If authorized, proceed with deletion
+  const deleteRes = await fetch(`${API_URL}/tweet/${id}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+      Authorization: `Bearer ${authToken}`
+    }
   });
-  if (res.status != 200) {
+
+  if (deleteRes.status !== 200) {
     throw new Error('Failed to delete tweet');
   }
 };
+
 
   return (
   <TweetsApiContext.Provider 
