@@ -70,30 +70,33 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
   };
 
   // Simplify the fetching logic
-useEffect(() => {
-  const fetchCurrentUser = async () => {
-    const authToken = await SecureStore.getItemAsync('authToken');
-    if (!authToken) return;
-    console.log(`Fetching user data with token: ${authToken}`); // Debug log
+  useEffect(() => {
+    const loadUser = async () => {
+      const token = await SecureStore.getItemAsync('authToken');
+      if (!token) {
+        console.log('No token found');
+        return;
+      }
+      try {
+        const response = await fetch(`${API_URL}/user/me`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const userData = await response.json();
+        if (response.ok) {
+          setCurrentUser(userData);
+          console.log('User data fetched and set:', userData);
+        } else {
+          throw new Error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-    try {
-      const response = await fetch(`${API_URL}/user/me`, {
-        headers: { 'Authorization': `Bearer ${authToken}` },
-      });
-      console.log('Response received:', response); // Log the raw response
-
-      if (!response.ok) throw new Error('Failed to fetch user data.');
-
-      const userData = await response.json();
-      console.log(`Received user data: `, userData); // Debug log
-      setCurrentUser(userData);
-    } catch (error) {
-      console.error(`Error fetching user data: `, error); // Log any errors
-    }
-  };
-
-  fetchCurrentUser();
-}, [authToken]); // Depend on authToken to refetch when it changes
+    loadUser();
+  }, [authToken]);
 
   return (
     <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>

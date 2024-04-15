@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAuth } from '@/context/AuthContext'; // Ensure the path is correct
 
 const Profile = () => {
   const { currentUser } = useAuth();
 
-  console.log("Current User in Profile: ", currentUser); // Log the current user data
+  useEffect(() => {
+    console.log("Current User updated in Profile: ", currentUser);
+  }, [currentUser]);
 
   return (
     <View style={styles.container}>
