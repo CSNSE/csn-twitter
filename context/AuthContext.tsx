@@ -6,105 +6,73 @@ import { API_URL } from "@/lib/api/config";
 const AuthContext = createContext({});
 
 export const AuthContextProvider = ({children}: PropsWithChildren) => {
-  const [authToken, setAuthToken] = useState<string | null>(null);
-  const [currentUser, setCurrentUser] = useState(null);
-  const segments = useSegments();
-  const router = useRouter();
+    const [authToken, setAuthToken] = useState<string | null>(null);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [loadingError, setLoadingError] = useState(null);
+    const segments = useSegments();
+    const router = useRouter();
 
-  useEffect(() => {
-    const isAuthGroup = segments[0] == '(auth)';
+    useEffect(() => {
+        const isAuthGroup = segments[0] === '(auth)';
+        if (!authToken && !isAuthGroup) {
+            router.replace('/signin');
+        } 
+        if (authToken && isAuthGroup) {
+            router.replace('/');
+        }
+    }, [segments, authToken]);
 
-    if (!authToken && !isAuthGroup) {
-      router.replace('/signin');
-    } 
-    if (authToken && isAuthGroup) {
-      router.replace('/');
-    }
-  }, [segments, authToken]);
+    useEffect(() => {
+        const loadAuthToken = async () => {
+            const token = await SecureStore.getItemAsync('authToken');
+            setAuthToken(token);
+        };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const authToken = await SecureStore.getItemAsync('authToken');
-      if (authToken) {
-        try {
-          const response = await fetch(`${API_URL}/user/me`, {
-            headers: {
-              'Authorization': `Bearer ${authToken}`
+        loadAuthToken();
+    }, []);
+
+    useEffect(() => {
+        if (!authToken) return;
+
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(`${API_URL}/user/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setCurrentUser(data);
+                    setLoadingError(null);
+                } else {
+                    throw new Error(data.message || "Unable to fetch user data");
+                }
+            } catch (error) {
+                setLoadingError(error.message);
+                console.error("Error fetching user data:", error);
             }
-          });
-          if (response.ok) {
-            const userData = await response.json();
-            setCurrentUser(userData); // Assuming userData contains the email and any other needed info
-          } else {
-            console.error("Failed to fetch user data: ", response.statusText);
-            // Handle failure (e.g., clearing auth token and redirecting to login)
-          }
-        } catch (error) {
-          console.error("Error fetching user data: ", error);
-          // Handle errors, such as network issues
-        }
-      }
-    };
-    fetchData();
-  }, []);
-  
+        };
 
-  useEffect(() => {
-    const loadAuthToken = async () => {
-      const res = await SecureStore.getItemAsync('authToken');
-      if (res) {
-        setAuthToken(res);
-    }
-    }
-    loadAuthToken();
-  }, [])
+        fetchUserData();
+    }, [authToken]);
 
-  const updateAuthToken = async (newToken: string) => {
-    await SecureStore.setItemAsync('authToken', newToken);
-    setAuthToken(newToken);
-  };
-
-  const removeAuthToken = async () => {
-    await SecureStore.deleteItemAsync('authToken');
-    setAuthToken(null);
-  };
-
-  // Simplify the fetching logic
-  useEffect(() => {
-    const loadUser = async () => {
-      const token = await SecureStore.getItemAsync('authToken');
-      if (!token) {
-        console.log('No token found');
-        return;
-      }
-      try {
-        const response = await fetch(`${API_URL}/user/me`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const userData = await response.json();
-        if (response.ok) {
-          setCurrentUser(userData);
-          console.log('User data fetched and set:', userData);
-        } else {
-          throw new Error('Failed to fetch user data');
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+    const updateAuthToken = async (newToken: string) => {
+        await SecureStore.setItemAsync('authToken', newToken);
+        setAuthToken(newToken);
     };
 
-    loadUser();
-  }, [authToken]);
+    const removeAuthToken = async () => {
+        await SecureStore.deleteItemAsync('authToken');
+        setAuthToken(null);
+        setCurrentUser(null);
+        setLoadingError("Logged out");
+    };
 
-  return (
-    <AuthContext.Provider value={{ authToken, updateAuthToken, removeAuthToken, currentUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ authToken, currentUser, updateAuthToken, removeAuthToken, loadingError }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthContextProvider;
-
 export const useAuth = () => useContext(AuthContext);
