@@ -1,26 +1,25 @@
 import { Link, useRouter } from "expo-router";
-import { useState, useContext } from "react";
-import { 
-    View, 
-    StyleSheet, 
-    Text, 
-    Image, 
-    TextInput, 
+import { useState } from "react";
+import {
+    View,
+    StyleSheet,
+    Text,
+    Image,
+    TextInput,
     Pressable,
-    SafeAreaView, 
+    SafeAreaView,
     ActivityIndicator
 } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTweetsApi } from "@/lib/api/tweets";
-import AuthContext from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext"; // Using the useAuth hook for consistency
 
 export default function NewTweet() {
     const [text, setText] = useState('');
     const router = useRouter();
-    const { currentUser } = useContext(AuthContext) || {}; // Defaulting to an empty object if context is undefined
+    const { currentUser } = useAuth(); // Now using the useAuth hook
 
     const { createTweet } = useTweetsApi();
-
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
