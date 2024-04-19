@@ -5,6 +5,7 @@ import { Pressable, useColorScheme, Image } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useAuth } from '@/context/AuthContext';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -21,10 +22,11 @@ function TabBarIcon(props: {
 
 function AvatarHeader() {
   const navigation = useNavigation();
+  const { currentUser } = useAuth();
   return (
     <Pressable onPress={() => navigation.openDrawer() }>
       <Image 
-        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" 
+        source={{ uri: currentUser?.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' }}  
         style={{width: 30, aspectRatio: 1, borderRadius: 40, marginLeft: 10 }}
       />
     </Pressable>
