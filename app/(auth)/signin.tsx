@@ -16,19 +16,34 @@ const SignIn = () => {
       const response = await login({ email });
       // Assuming the login function navigates to the verification code page or handles it internally
       router.push({ pathname: '/authenticate', params: { email } });
-    } catch (e) {
-      Alert.alert('Error', e.message);
-    }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        Alert.alert('Error', e.message);
+      } else {
+        Alert.alert('Error', 'An unknown error occurred');
+      }
+    }    
   };
 
   const onCreateAccount = async () => {
     try {
-      const response = await register({ email, username });
-      router.push({ pathname: '/authenticate', params: { email }});
-    } catch (e) {
-      Alert.alert('Error', e.message);
+      const response = await register({ email, username, name });
+      const result = await response.json();  // Ensure to parse the JSON response to access potential messages or data
+  
+      if (response.ok) {
+        router.push({ pathname: '/authenticate', params: { email } });  // Navigate on successful account creation
+      } else {
+        // Check if there's a specific message from the server in case of failure
+        throw new Error(result.message || 'Failed to create account');  
+      }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        Alert.alert('Error', e.message);
+      } else {
+        Alert.alert('Error', 'An unknown error occurred');
+      }
     }
-  }
+  };  
 
   return (
     <View style={styles.container}>

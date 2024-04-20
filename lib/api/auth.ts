@@ -30,7 +30,7 @@ export const authenticate = async (data: {
   return res.json();
 };
 
-export const register = async (data: { email: string; username: string }) => {
+export const register = async (data: { email: string; username: string; name: string }) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: 'POST',
     headers: {
@@ -38,8 +38,5 @@ export const register = async (data: { email: string; username: string }) => {
     },
     body: JSON.stringify(data),
   });
-  if (res.status !== 200) {
-    throw new Error('Error during the account creation process');
-  }
-  return res.json();
+  return res;  // Return the fetch response directly for detailed handling in the component
 };
