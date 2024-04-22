@@ -1,4 +1,3 @@
-import { useRouter, useSegments } from "expo-router";
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { API_URL } from "@/lib/api/config";
@@ -9,25 +8,12 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
     const [authToken, setAuthToken] = useState<string | null>(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [loadingError, setLoadingError] = useState(null);
-    const segments = useSegments();
-    const router = useRouter();
-
-    useEffect(() => {
-        const isAuthGroup = segments[0] === '(auth)';
-        if (!authToken && !isAuthGroup) {
-            router.replace('/signin');
-        } 
-        if (authToken && isAuthGroup) {
-            router.replace('/');
-        }
-    }, [segments, authToken]);
 
     useEffect(() => {
         const loadAuthToken = async () => {
             const token = await SecureStore.getItemAsync('authToken');
             setAuthToken(token);
         };
-
         loadAuthToken();
     }, []);
 
@@ -51,13 +37,39 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
                 console.error("Error fetching user data:", error);
             }
         };
-
         fetchUserData();
     }, [authToken]);
 
     const updateAuthToken = async (newToken: string) => {
         await SecureStore.setItemAsync('authToken', newToken);
         setAuthToken(newToken);
+    };
+
+    const updateUsername = async (newUsername: string) => {
+        if (!currentUser || !authToken) {
+            setLoadingError("Not authenticated");
+            return;
+        }
+        try {
+            const response = await fetch(`${API_URL}/user/updateUsername`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: currentUser.id, newUsername }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setCurrentUser({ ...currentUser, username: newUsername });
+                setLoadingError(null);
+            } else {
+                throw new Error(data.message || "Failed to update username");
+            }
+        } catch (error) {
+            setLoadingError(error.message);
+            console.error("Error updating username:", error);
+        }
     };
 
     const removeAuthToken = async () => {
@@ -68,7 +80,7 @@ export const AuthContextProvider = ({children}: PropsWithChildren) => {
     };
 
     return (
-        <AuthContext.Provider value={{ authToken, currentUser, updateAuthToken, removeAuthToken, loadingError }}>
+        <AuthContext.Provider value={{ authToken, currentUser, updateAuthToken, removeAuthToken, updateUsername, loadingError }}>
             {children}
         </AuthContext.Provider>
     );
