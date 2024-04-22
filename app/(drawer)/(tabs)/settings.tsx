@@ -28,19 +28,8 @@ const SettingsScreen = () => {
     );
   };
 
-  const navigateToProfileSettings = () => {
-    console.log('Navigate to profile settings');
-    // Insert navigation logic here
-  };
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.settingItem} onPress={navigateToProfileSettings}>
-        <Ionicons name="person-circle" size={24} color="black" />
-        <Text style={styles.text}>Profile Settings</Text>
-        <Ionicons name="chevron-forward" size={24} color="black" />
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
         <Ionicons name="log-out-outline" size={24} color="black" />
         <Text style={styles.text}>Logout</Text>
