@@ -12,26 +12,23 @@ const Profile = () => {
             await updateUsername(newUsername);
             setEditing(false);
         } catch (error) {
-            // Handle error (e.g., show an error message)
-            console.error(error);
+            console.error(error); // Handle error (e.g., show an error message)
         }
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
+            <View style={styles.profileCard}>
                 <Image source={{ uri: currentUser.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' }} style={styles.profileImage} />
                 <Text style={styles.username} onPress={() => setEditing(true)}>{currentUser.username}</Text>
-            </View>
-            <View style={styles.userInfo}>
-                <Text style={styles.userDetailLabel}>Email:</Text>
-                <Text style={styles.userDetail}>{currentUser.email}</Text>
+                <Text style={styles.name}>{currentUser.name}</Text>
+                <Text style={styles.email}>{currentUser.email}</Text>
             </View>
 
             {isEditing && (
                 <Modal
                     visible={isEditing}
-                    animationType="fade"
+                    animationType="slide"
                     transparent={true}
                     onRequestClose={() => setEditing(false)}
                 >
@@ -58,53 +55,57 @@ const Profile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        padding: 20,
-    },
-    header: {
+        backgroundColor: '#EBF0F0',
         alignItems: 'center',
-        marginBottom: 20,
+        justifyContent: 'center',
+    },
+    profileCard: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 32,
+        padding: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     profileImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
+        width: 130,
+        height: 130,
+        borderRadius: 65,
         marginBottom: 10,
     },
     username: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#333',
+        marginBottom: 4,
     },
-    userInfo: {
-        paddingHorizontal: 20,
-        paddingTop: 10,
-    },
-    userDetailLabel: {
-        fontSize: 16,
+    name: {
+        fontSize: 20,
+        fontWeight: 'normal',
         color: '#666',
-        marginBottom: 5,
+        marginBottom: 2,
     },
-    userDetail: {
-        fontSize: 18,
+    email: {
+        fontSize: 16,
+        color: '#333',
         marginBottom: 10,
     },
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adds a semi-transparent overlay
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
         width: '80%',
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 20,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
