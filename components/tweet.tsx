@@ -48,7 +48,7 @@ const Tweet = ({ tweet, isIndividualView }: TweetProps) => {
   return (
     <Link href={`/feed/tweet/${tweet.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image source={{ uri: tweet.user.image }} style={styles.userImage} />
+        <Image source={{ uri: tweet.user.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png' }} style={styles.userImage} />
         
         <View style={styles.mainContainer}>
           <View style={{ flexDirection: 'row' }}>
